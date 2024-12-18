@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+	<menu>
+	  <add id="Icecube_OrderReminder::IcecubeOrder" title="Re-order" translate="title" module="Icecube_OrderReminder" sortOrder="40" dependsOnModule="Icecube_OrderReminder" resource="Icecube_OrderReminder::IcecubeOrder"/>
+	  <add id="Icecube_OrderReminder::Order" title="Order" translate="title" module="Icecube_OrderReminder" parent="Icecube_OrderReminder::IcecubeOrder" sortOrder="30" dependsOnModule="Icecube_OrderReminder" resource="Icecube_OrderReminder::Order"/>
+	  <add id="Icecube_OrderReminder::Configuration" title="Configuration" translate="title" module="Icecube_OrderReminder" parent="Icecube_OrderReminder::Order" sortOrder="20" dependsOnModule="Icecube_OrderReminder" action="admin/system_config/edit/section/icecube_mailsender" resource="Icecube_OrderReminder::Configuration"/>
+	  <!-- <add id="Icecube_OrderReminder::Mail_sender" title=" Mail Sender" translate="title" module="Icecube_OrderReminder" parent="Icecube_OrderReminder::Order" sortOrder="10" dependsOnModule="Icecube_OrderReminder" action="icecubeorder/index" resource="Icecube_OrderReminder::Mail_sender"/> -->
+	</menu>
+</config>
+

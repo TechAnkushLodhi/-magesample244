@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Ui/etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">custom_form_form.custom_form_form_data_source</item>
+            <item name="deps" xsi:type="string">custom_form_form.custom_form_form_data_source</item>
+        </item>
+        <item name="label" xsi:type="string" translate="true">Custom Form</item>
+        <item name="config" xsi:type="array">
+            <item name="dataScope" xsi:type="string">data</item>
+            <item name="namespace" xsi:type="string">custom_form_form</item>
+        </item>
+    </argument>
+    <dataSource name="custom_form_form_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Icecube\Manager\Ui\DataProvider\Form\FormDataProvider</argument>
+            <argument name="name" xsi:type="string">custom_form_form_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">form_id</argument>
+            <argument name="requestFieldName" xsi:type="string">form_id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="submit_url" xsi:type="url" path="custom_form/form/save"/>
+                </item>
+            </argument>
+        </argument>
+    </dataSource>
+    <fieldset name="general">
+        <field name="form_name">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Form Name</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="dataScope" xsi:type="string">form_name</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="unique_identifier">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Unique Identifier</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="dataScope" xsi:type="string">unique_identifier</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <container name="dynamic_form_fields">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Fields</item>
+                </item>
+            </argument>
+            <dataSource name="dynamic_form_fields_data_source">
+                <argument name="dataProvider" xsi:type="configurableObject">
+                    <argument name="class" xsi:type="string">Icecube\Manager\Ui\DataProvider\Form\FieldDataProvider</argument>
+                    <argument name="name" xsi:type="string">dynamic_form_fields_data_source</argument>
+                    <argument name="primaryFieldName" xsi:type="string">field_id</argument>
+                    <argument name="requestFieldName" xsi:type="string">field_id</argument>
+                </argument>
+            </dataSource>
+            <listing name="dynamic_form_fields_listing">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="spinner" xsi:type="string">dynamic_form_fields_listing</item>
+                        <item name="dataScope" xsi:type="string">dynamic_form_fields</item>
+                        <item name="deps" xsi:type="string">dynamic_form_fields_listing.dynamic_form_fields_data_source</item>
+                        <item name="namespace" xsi:type="string">dynamic_form_fields_listing</item>
+                        <item name="externalProvider" xsi:type="string">dynamic_form_fields_listing.dynamic_form_fields_listing_data_source</item>
+                        <item name="childDefaults" xsi:type="array">
+                            <item name="provider" xsi:type="string">dynamic_form_fields_listing.dynamic_form_fields_listing_data_source</item>
+                            <item name="enabled" xsi:type="boolean">true</item>
+                        </item>
+                    </item>
+                </argument>
+                <columns name="listing_columns">
+                    <column name="label">
+                        <settings>
+                            <label translate="true">Label</label>
+                        </settings>
+                    </column>
+                    <column name="type">
+                        <settings>
+                            <label translate="true">Type</label>
+                        </settings>
+                    </column>
+                    <column name="is_required">
+                        <settings>
+                            <label translate="true">Required</label>
+                        </settings>
+                    </column>
+                    <actionsColumn name="actions" class="Magento\Ui\Component\Listing\Columns\Actions">
+                        <settings>
+                            <label translate="true">Actions</label>
+                            <indexField>field_id</indexField>
+                        </settings>
+                    </actionsColumn>
+                </columns>
+                <listingToolbar name="listing_top">
+                    <paging name="listing_paging"/>
+                </listingToolbar>
+            </listing>
+        </container>
+        <button name="add_field">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="title" xsi:type="string" translate="true">Add Field</item>
+                    <item name="actions" xsi:type="array">
+                        <item name="addField" xsi:type="string">custom_form_form.dynamic_form_fields_listing.insert</item>
+                    </item>
+                </item>
+            </argument>
+        </button>
+    </fieldset>
+    <actions name="form-actions">
+        <button name="save">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="title" xsi:type="string" translate="true">Save</item>
+                    <item name="actions" xsi:type="array">
+                        <item name="save" xsi:type="string">custom_form_form.save</item>
+                    </item>
+                </item>
+            </argument>
+        </button>
+    </actions>
+</form>

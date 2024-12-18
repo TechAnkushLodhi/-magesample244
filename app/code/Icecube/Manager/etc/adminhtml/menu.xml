@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/menu_configuration.xsd">
+    <menu>
+        <!-- Main Menu -->
+        <add id="Icecube_Manager::manager"
+             title="Manager"
+             module="Icecube_Manager"
+             sortOrder="10"
+             resource="Icecube_Manager::manager"/>
+
+        <!-- Department Submenu -->
+        <add id="Icecube_Manager::department"
+             title="Department"
+             module="Icecube_Manager"
+             sortOrder="20"
+             parent="Icecube_Manager::manager"
+             action="manager/department/index"
+             resource="Icecube_Manager::department"/>
+
+        <!-- Positions Submenu -->
+        <add id="Icecube_Manager::positions"
+             title="Positions"
+             module="Icecube_Manager"
+             sortOrder="30"
+             parent="Icecube_Manager::manager"
+             action="manager/positions/index"
+             resource="Icecube_Manager::positions"/>
+
+        <!-- Forms Submenu -->
+        <add id="Icecube_Manager::forms"
+             title="Forms"
+             module="Icecube_Manager"
+             sortOrder="40"
+             parent="Icecube_Manager::manager"
+             action="manager/form/index"
+             resource="Icecube_Manager::forms"/>
+    </menu>
+</config>

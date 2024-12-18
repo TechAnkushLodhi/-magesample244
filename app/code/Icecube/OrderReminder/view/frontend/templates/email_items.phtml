@@ -1,0 +1,111 @@
+<?php
+$OrderDetail = $block->getData('datavalues');
+
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$currencyFactory = $objectManager->get("Magento\Directory\Model\CurrencyFactory");
+$orderobject = $objectManager->get('Magento\Sales\Model\Order');
+$orderItemCollectionFactory = $objectManager->get('Magento\Sales\Model\ResourceModel\Order\Item\CollectionFactory');
+$order = $orderobject->loadByIncrementId($OrderDetail['data']['Order_ID']);
+$orderItemsCollection = $orderItemCollectionFactory->create()->setOrderFilter($order);
+// print_r($orderItemsCollection->getData());
+// exit;
+$currencyCode = $order->getOrderCurrencyCode();
+$currency = $currencyFactory->create()->load($currencyCode);
+$currencySymbol = $currency->getCurrencySymbol();
+?>
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-bottom:25px;
+    }
+    tbody{
+        border:1px solid 
+    }
+    th, td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+        border:none;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    .email-intro {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px;
+    }
+
+    .cta-button {
+        background-color: #4CAF50;
+        color: white !important;
+        padding: 10px;
+        text-decoration: none;
+        display: inline-block;
+        border-radius: 5px;
+    }
+</style>
+<table>
+    <tr class="email-intro">
+        <td>
+            Hello, <?php echo $OrderDetail['customer_name']; ?>
+        </td>
+    </tr>
+</table>
+<table border='2'>
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+        <?php foreach ($orderItemsCollection as $item) : ?>
+            <?php if (!$item->getParentItemId()) : ?>
+                <tbody>
+                <tr>
+                    <td>
+                        <p class="product-name"><strong><?php echo $item->getName(); ?></strong></p>
+                        <p class="sku"><?php echo 'SKU :' .$item->getSku(); ?></p>
+                        <?php if ($item->getProductType() == 'configurable') : ?>
+                          <dl>
+                            <?php  
+                            foreach ($item->getProductOptions()['attributes_info'] as  $Attribute) : ?>
+                               <dt><?php echo  $Attribute['label'];  ?></dt>  
+                               <dd><?php echo  $Attribute['value'];  ?></dd>      
+                           <?php endforeach; 
+                            ?>
+                         </dl>
+                        <?php endif; ?>
+                        <?php if ($item->getProductType() == 'bundle') : ?>
+                        </td>  
+                        <td class="product-qty"><?php echo $item->getQtyOrdered(); ?></td>
+                        <td class="product-price"><?php echo $currencySymbol.''.$item->getRowTotal(); ?></td>                       
+                        </tr>
+                          <?php  foreach ($item->getProductOptions()['bundle_options'] as  $OptionArray) :?>
+                            <tr class="bundle-option-lable"> <td><strong><em><?php echo $OptionArray['label']; ?></em></strong></td></tr>
+                                  <?php
+                                    foreach ($OptionArray['value'] as $value) :
+                                    ?>
+                                    <tr class="bundle-option-value"><td><p><?php  echo $value['qty'].' '; ?><span>X</span><?php echo  $value['title'].' '; ?><span class="bundlePrice"><?php echo $currencySymbol.''.$value['price']; ?></span></p></td></tr>
+                                  <?php endforeach; ?>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    <?php if ($item->getProductType() !== 'bundle') : ?> 
+                    </td>
+                    <td class="product-qty"><?php echo $item->getQtyOrdered(); ?></td>
+                    <td class="product-price"><?php echo $currencySymbol.''.$item->getRowTotal(); ?></td>
+                </tr>
+                <?php endif; ?>
+                </tbody>
+            <?php endif; ?>
+        <?php endforeach; ?>   
+</table>
+<p>
+    <a href="<?php echo $OrderDetail['Add_To_Cart']; ?>" class="cta-button">Reorder</a>
+</p>
+
+

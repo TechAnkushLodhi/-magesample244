@@ -1,0 +1,13 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Icecube_OrderReminder::IcecubeOrder" title="Icecube Order Reminder" translate="title">
+                    <resource id="Icecube_OrderReminder::Order" title="Order" translate="title">
+                        <resource id="Icecube_OrderReminder::Configuration" title="Configuration" translate="title"/>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

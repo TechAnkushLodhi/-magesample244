@@ -1,0 +1,11 @@
+.admin__menu .level-0.item-icecubemonitoring > a:before {
+    background: url('../images/monitoring.png');
+    height: 62px;
+    content: "";
+    margin: 0 auto;
+    width: 46px;
+    max-width: 100%;
+    background-size: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+}

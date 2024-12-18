@@ -1,0 +1,9 @@
+type Query {
+customProductQuery(id: Int!): CustomProduct @resolver(class: "\\Icecube\\Project\\Model\\Resolver\\CustomProductQuery")
+}
+type CustomProduct {
+id: Int
+name: String
+price: Float
+# Add more fields as needed
+}

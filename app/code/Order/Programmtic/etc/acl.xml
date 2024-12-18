@@ -1,0 +1,13 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Order_Programmtic::MultiOrder" title="MultiOrder" translate="title">
+                    <resource id="Order_Programmtic::Order" title="Order" translate="title">
+                        <resource id="Order_Programmtic::Configuration" title="Configuration" translate="title"/>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

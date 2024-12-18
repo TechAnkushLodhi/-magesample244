@@ -1,0 +1,44 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="Icecube" translate="label" sortOrder="200">
+            <label>Icecube</label>
+        </tab>
+        <section id="icecube_mailsender" translate="label" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>OrderReminder</label>
+          <tab>Icecube</tab>
+          <resource>Icecube_OrderReminder::configuration</resource>
+              
+            <group id="general" translate="label" type="label" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>General</label>
+            <field id="enable" translate="label" type="select" canRestore="1" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Enable Module</label>
+                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            </field>
+            </group>
+            <group id="Mail_Data" translate="label" type="label" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="1"  >
+                <label>OrderReminder Mail Configuration</label>
+                <comment>Check if emails are being sent. If not, configure SMTP settings. This feature requires pre-configured SMTP settings.</comment>
+               <field id="NumberOfDays" translate="label" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Number of Days</label>
+                    <comment>Enter the number of days</comment>
+                    <validate>validate-digits</validate>
+                </field>
+                <field id="SenderName" translate="label" canRestore="1" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Sender Name</label>
+                    <comment>Enter the name of the sender.</comment>
+                </field>
+
+                <field id="SenderEmail" translate="label" canRestore="1" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Sender Email</label>
+                    <validate>validate-email</validate>
+                    <comment>Enter the email address of the sender, e.g., example@example.com</comment>
+                </field>
+
+            
+
+
+            </group>
+            
+        </section>
+    </system>
+</config>

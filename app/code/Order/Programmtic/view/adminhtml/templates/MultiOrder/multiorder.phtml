@@ -1,0 +1,495 @@
+<div class="page-main-actions">
+    <div class="page-actions-placeholder" style=""></div>
+    <div class="page-actions">
+        <div class="page-actions-inner" data-title="Import">
+            <div class="page-actions-buttons">
+                <button id="upload_button" title="Check Data" type="button"
+                    class="action-default scalable save primary">
+                    <span>Check Data</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="messages">
+    <div class="messages">
+        <div class="message message-notice notice">
+            <div data-ui-id="messages-message-notice">Make sure your file isn't more than 40M.</div>
+        </div>
+    </div>
+</div>
+<form action="" class="Order-import">
+    <fieldset class="fieldset admin__fieldset " id="base_fieldset">
+        <legend class="admin__legend legend">
+            <span>Import Order Settings</span>
+        </legend><br>
+        <div class="admin__field field field-entity  with-addon required _required">
+            <label class="label admin__field-label" for="entity">
+                <span>Entity Type</span>
+            </label>
+            <div class="admin__field-control control">
+                <div class="admin__field">
+                    <select id="entity" name="entity" title="Entity Type"
+                        class=" required-entry _required select admin__control-select"
+                        formelementhookid="elemIdQtOSvnqAJC"
+                        data-ui-id="import-form-container-form-fieldset-element-select-entity" aria-required="true">
+                        <option value="" id="optId1k3d0bda" selected="selected">-- Please Select --</option>
+                        <option value="order" id="order">order</option>
+                    </select>
+                    <style>
+                        .admin__field {
+                            display: flex;
+                            align-items: center;
+                        }
+                        label.addafter {
+                                margin-left: 20px;
+                            }
+                    </style>
+                    <label class="addafter" for="entity">
+                      <span id="sample-file-span"  style="display: none;">
+                         <a id="sample-file-link" href="/media/samplefile/sampledata.csv" download>Download Sample File</a>
+                       </span>
+                       <script>
+                          function toggleSampleFileLink() {
+                                var entityValue = document.getElementById('entity').value;                                 var sampleFileSpan = document.getElementById('sample-file-span'); 
+                                if (entityValue === 'order') {
+                                    sampleFileSpan.style.display = 'block';
+                                } else {
+                                    sampleFileSpan.style.display = 'none';
+                                }
+                            }
+                            document.getElementById('entity').addEventListener('change', toggleSampleFileLink);
+                            window.onload = toggleSampleFileLink;
+                       </script>
+                      </label>
+                    <label id="entity-error" class="mage-error" for="entity" style="display:none;">This is a required field.</label>
+                </div>
+            </div>
+        </div>
+
+    </fieldset>
+    <fieldset class="fieldset admin__fieldset no-display" id="upload_file_fieldset" style="display: none;">
+        <legend class="admin__legend legend">
+            <span>File to Import</span>
+        </legend>
+        <div class="admin__field field field-import_file  with-addon required _required with-note" >
+        <label class="label admin__field-label" for="import_file">
+            <span>Select File to Import</span>
+        </label>
+        <div class="admin__field-control control">
+            <div class="admin__field">
+                <input id="import_file" name="import_file" title="Select File to Import"
+                    class="input-file required-entry _required" type="file">
+              <label id="file-type-error" class="mage-error" style="display:none;">Please select a valid CSV file.</label>
+            </div>
+            <div class="note admin__field-note" id="import_file-note">File must be saved in UTF-8 encoding for properimport</div>
+        </div>
+       </div>
+    </fieldset>
+</form>
+<div id="output">
+
+</div>
+
+<script>
+require([
+    'jquery'
+], function($) {
+    'use strict';
+    $(document).ready(function() {
+        function getExcelColumnName(position) {
+        var columnName = "";
+        while (position > 0) {
+            var remainder = (position - 1) % 26;
+            columnName = String.fromCharCode(65 + remainder) + columnName;
+            position = Math.floor((position - 1) / 26);
+        }
+        return columnName;
+        }
+
+        $('#entity').on('change', function() {
+            var entityType = $('#entity').val();
+            if(entityType=='order'){
+                $('#upload_file_fieldset').css('display','block')
+            }else{
+                $('#upload_file_fieldset').css('display','none')
+            }
+        });
+
+        $('#upload_button').on('click', function() {
+            var entityType = $('#entity').val();
+            if(!entityType){
+                $('#entity-error').css('display','block')
+            }else{
+                $('#entity-error').css('display','none')
+            }
+            var fileName = $('#import_file').val();
+              if (fileName!== '') {
+                  handleFileUpload();
+            } else {
+                ShowErorr("No file has been selected");
+            }
+           
+        });
+
+        // $('#import_file').on('change', function (e) {
+        //             var file = e.target.files[0];
+        //                if (file) {
+        //                 if (file.name.endsWith('.csv')) {
+        //                     var reader = new FileReader();
+        //                     reader.onload = function (e) {
+        //                         var content = e.target.result;
+        //                         if (content.trim().length === 0) {
+        //                             console.error('CSV file is empty.');
+        //                             return;
+        //                         }  
+        //                         var lines = content.split('\r\n');
+        //                         // Check if CSV has a header
+        //                         if (lines.length > 0) {
+        //                             var header= lines[0].split(',');
+        //                             // Check if the header has all required columns
+        //                             var requiredColumns = [
+        //                                 'customer_email',
+        //                                 'customer_new_address',
+        //                                 'default_address_use',
+        //                                 'store_Id',
+        //                                 'shipping_method',
+        //                                 'items'
+        //                             ];
+        //                             var missingColumns = [];
+        //                             for (var i = 0; i < requiredColumns.length; i++) {
+        //                                 if (header.indexOf(requiredColumns[i]) === -1) {
+        //                                     missingColumns.push(requiredColumns[i]);
+        //                                 }
+        //                             }
+        //                             if (missingColumns.length === 0) {
+        //                                 if (lines.length > 2) {
+        //                                     var ifError=false;
+        //                                     var rows = [];
+        //                                     for (var j = 1; j < lines.length-1; j++) {
+        //                                         var values = lines[j].split(",");
+        //                                         rows.push(values);  
+        //                                     }
+        //                                     var rowData={};
+        //                                     var output = [];
+        //                                     var r_c=2;
+        //                                             $.each(rows, function (index, row) {
+        //                                                 var rowData = {};
+        //                                                 $.each(header, function (i, key) {
+        //                                                     if (row[i] !== undefined && row[i] !== null && row[i] !== "") {
+        //                                                             rowData[key] = row[i];
+        //                                                         } else {
+        //                                                             console.error("Empty value found for key: " + key+'-'+ getExcelColumnName(i+1) + r_c);
+        //                                                              ifError=true;
+        //                                                             return false;
+        //                                                     }
+        //                                                 });
+        //                                                 r_c++;
+        //                                                 output.push(rowData);
+        //                                             });
+        //                                             output.forEach(function(item) {
+        //                                                 item["items"] = item["items"].split('|');
+        //                                                 if(item["customer_new_address"]!=='null'){
+        //                                                     item["customer_new_address"] = item["customer_new_address"].split('|');
+        //                                                 }
+        //                                             });
+        //                                             $.each(output, function(index, element) {
+        //                                                 if(element.default_address_use!=="0" && element.default_address_use!=="1" ){
+        //                                                     console.error("Only '0' and '1' are allowed in this field, 0 is allowed for  not use defualt address and 1 is allowed for use defualt address ");
+        //                                                      ifError=true;
+        //                                                     return false;
+        //                                                 }
+        //                                                 if(element.default_address_use=="1"){
+        //                                                     if(element.customer_new_address!=="null"){
+        //                                                          console.error("If you use the value 1 for default_address_use, then it is compulsory to use null value for the customer_new_address field.")
+        //                                                           ifError=true;
+        //                                                          return false;
+        //                                                     }
+        //                                                 } 
+        //                                                 if(element.default_address_use=="0"){
+        //                                                     if(element.customer_new_address=="null"){   
+        //                                                          console.error("Please enter your address detail");
+        //                                                          ifError=true;
+        //                                                          return false;
+        //                                                     }
+        //                                                 } 
+
+        //                                                     var newAddress = {};
+        //                                                    if(element.customer_new_address!=="null"){
+        //                                                                 $.each(element.customer_new_address, function(i, addressValue) {
+        //                                                                     var parts = addressValue.split(':');
+        //                                                                     newAddress[parts[0]] = parts[1];
+        //                                                                 });
+        //                                                             element.customer_new_address = newAddress;
+        //                                                     }  
+
+        //                                                     if(element.default_address_use == "0") {
+        //                                                         if(element.customer_new_address.firstname == null ||
+        //                                                             element.customer_new_address.lastname == null ||
+        //                                                             element.customer_new_address.street == null ||
+        //                                                             element.customer_new_address.city == null ||
+        //                                                             element.customer_new_address.country_id == null ||
+        //                                                             element.customer_new_address.region == null ||
+        //                                                             element.customer_new_address.postcode == null ||
+        //                                                             element.customer_new_address.telephone == null ||
+        //                                                             element.customer_new_address.firstname == '' ||
+        //                                                             element.customer_new_address.lastname == '' ||
+        //                                                             element.customer_new_address.street == '' ||
+        //                                                             element.customer_new_address.city == '' ||  
+        //                                                             element.customer_new_address.country_id == '' ||
+        //                                                             element.customer_new_address.region == '' ||
+        //                                                             element.customer_new_address.postcode == '' ||
+        //                                                             element.customer_new_address.telephone == ''
+        //                                                         ){
+        //                                                             console.log("Address required fields: firstname, lastname, street, city, country_id, region, postcode, telephone");
+        //                                                              ifError=true;
+        //                                                             return false;
+        //                                                         }
+        //                                                     }
+        //                                              });
+        //                                            if(!ifError){
+        //                                               //   ajex start here
+        //                                                 var sendData = {
+        //                                                     output: output,
+        //                                                     };
+        //                                                 $.ajax({
+        //                                                     url: '/admin/importorder/index/import',
+        //                                                     method: 'POST',
+        //                                                     dataType: 'json',
+        //                                                     data: sendData,
+        //                                                     async: false, 
+        //                                                     success: function(response) {
+        //                                                             if (response.status === 'error') {
+        //                                                             console.log(response.message);
+
+        //                                                             } else {
+        //                                                                 console.log(response.message);
+        //                                                             }
+        //                                                         },
+        //                                                         error: function(xhr, status, error) {
+        //                                                             console.error(xhr.responseText); // Log errors to console
+        //                                                         }
+        //                                                 });
+        //                                            }
+                                              
+
+        //                                 } else {
+        //                                         console.error('CSV does not have rows.');
+        //                                     }
+                                       
+        //                             } else {
+        //                                 console.error('CSV header is missing required columns: ' + missingColumns.join(', '));
+        //                             }
+        //                         } else {
+        //                             console.error('CSV does not have a header.');
+        //                         }
+        //                     };
+
+        //                     reader.onerror = function (e) {
+        //                         console.error('Error reading the file:', e.target.error);
+        //                     };
+
+        //                     reader.readAsText(file);
+        //                     $('#file-type-error').hide();
+        //                 } else {
+        //                     $('#file-type-error').show();
+        //                 }
+        //             }
+        // });
+        
+        
+
+        function handleFileUpload() {
+            var file = $('#import_file')[0].files[0];
+            if (!file) {
+                ShowErorr("File is empty.");
+                return false;
+            }
+            if (!file.name.endsWith('.csv')) {
+                ShowErorr("Please select a valid CSV file.");
+                return false;
+            }
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var content = e.target.result;
+                if (content.trim().length === 0) {
+                    ShowErorr("CSV file is empty.");
+                    return false;
+                } 
+                var lines = content.split('\r\n');
+                if (!(lines.length > 0)) {
+                    ShowErorr("CSV does not have a header.");
+                    return false;
+                }
+                var header= lines[0].split(',');
+               var missingColumns = HeaderRequireFieldCheck(header);
+                if (missingColumns.length !== 0) {
+                ShowErorr('CSV header is missing required columns: ' + missingColumns.join(', ')+'.');
+                return false;
+               }
+               if (!(lines.length > 2)) {
+                ShowErorr('CSV does not have rows.');
+               }
+                var ifError=false;
+                var rows = [];
+                for (var j = 1; j < lines.length-1; j++) {
+                    var values = lines[j].split(",");
+                    rows.push(values);  
+                }
+                var rowData={};
+                var output = [];
+                var r_c=2;
+                $.each(rows, function (index, row) {
+                    var rowData = {};
+                    $.each(header, function (i, key) {
+                        if (row[i] !== undefined && row[i] !== null && row[i] !== "") {
+                                rowData[key] = row[i];
+                            }else{
+                                ShowErorr("Empty value found for key: " + key+'-'+ getExcelColumnName(i+1) + r_c);
+                                ifError=true;
+                                return false;
+                        }
+                    });
+                    r_c++;
+                    output.push(rowData);
+                });
+                if(!ifError){
+                    output.forEach(function(item) {
+                        item["items"] = item["items"].split('|');
+                        if(item["customer_new_address"]!=='null'){
+                            item["customer_new_address"] = item["customer_new_address"].split('|');
+                        }
+                    });
+
+                  var RequiredValueCheck = ValueCheck(output);
+
+                   if(RequiredValueCheck){
+                    var sendData = {
+                        output: output,
+                        };
+                    $.ajax({
+                        url: '/admin/importorder/index/import',
+                        method: 'POST',
+                        dataType: 'json',
+                        data: sendData,
+                        async: false, 
+                        success: function(response) {
+                                if (response.status === 'error') {
+                                  ShowErorr(response.message);
+                                }else{
+                                    console.log(response.message);
+                                    var outputDiv = $('#output');
+                                         outputDiv.empty(); 
+                                    outputDiv.append(JSON.stringify(response.message, undefined, 4));
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                ShowErorr(xhr.responseText);
+                            }
+                    });
+                   }
+
+                }
+               
+
+            };
+            reader.onerror = function (e) {
+                ShowErorr('Error reading the file:', e.target.error);
+            };
+            reader.readAsText(file);
+            HideErorr()
+        }
+
+        function ValueCheck(output){
+                        var ifError=false;
+                        $.each(output, function(index, element) {
+                        if(element.default_address_use!=="0" && element.default_address_use!=="1" ){
+                            ShowErorr("Only '0' and '1' are allowed in this field, 0 is allowed for  not use defualt address and 1 is allowed for use defualt address. ");
+                            ifError=true;
+                        }
+                        if(element.default_address_use=="1"){
+                            if(element.customer_new_address!=="null"){
+                                ShowErorr("If you use the value 1 for default_address_use, then it is compulsory to use null value for the customer_new_address field.")
+                                ifError=true;
+
+                            }
+                        } 
+                        if(element.default_address_use=="0"){
+                            if(element.customer_new_address=="null"){   
+                                ShowErorr("Please enter your address detail.");
+                                ifError=true;
+
+                            }
+                        } 
+
+                        var newAddress = {};
+                        if(element.customer_new_address!=="null"){
+                            $.each(element.customer_new_address, function(i, addressValue) {
+                                var parts = addressValue.split(':');
+                                newAddress[parts[0]] = parts[1];
+                            });
+                            element.customer_new_address = newAddress;
+                        }  
+                        
+
+                        if(element.default_address_use == "0") {
+                            if(element.customer_new_address.firstname == null ||
+                                element.customer_new_address.lastname == null ||
+                                element.customer_new_address.street == null ||
+                                element.customer_new_address.city == null ||
+                                element.customer_new_address.country_id == null ||
+                                element.customer_new_address.region == null ||
+                                element.customer_new_address.postcode == null ||
+                                element.customer_new_address.telephone == null ||
+                                element.customer_new_address.firstname == '' ||
+                                element.customer_new_address.lastname == '' ||
+                                element.customer_new_address.street == '' ||
+                                element.customer_new_address.city == '' ||  
+                                element.customer_new_address.country_id == '' ||
+                                element.customer_new_address.region == '' ||
+                                element.customer_new_address.postcode == '' ||
+                                element.customer_new_address.telephone == ''
+                            ){
+                                ShowErorr("Address required fields: firstname, lastname, street, city, country_id, region, postcode, telephone.");
+                                ifError=true;
+
+                            }
+                        }
+                    
+                        });
+                        if(!ifError){
+                            return output;
+                        }
+          
+        }
+
+        function HeaderRequireFieldCheck(header){
+                var requiredColumns = [
+                        'customer_email',
+                        'customer_new_address',
+                        'default_address_use',
+                        'store_Id',
+                        'shipping_method',
+                        'items'
+                    ];
+                    var missingColumns = [];
+                    for (var i = 0; i < requiredColumns.length; i++) {
+                        if (header.indexOf(requiredColumns[i]) === -1) {
+                            missingColumns.push(requiredColumns[i]);
+                        }
+                    }
+            return missingColumns;
+        }  
+        
+        function ShowErorr(value){
+            $('#file-type-error').empty().text(value);
+            $('#file-type-error').show();
+        }
+        function HideErorr(){
+         $('#file-type-error').hide();
+        }
+    });
+});
+</script>
+

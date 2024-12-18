@@ -1,0 +1,8 @@
+<!--@subject Sending Mail for OrderReminder From {{var store.getFrontendName()}} @-->
+<!-- Replace the following placeholders with your actual header and footer templates -->
+{{template config_path="design/email/header_template"}}
+
+{{layout area="frontend" datavalues=$OrderDetail handle="email_template"}}
+
+<!-- Replace the following placeholders with your actual header and footer templates -->
+{{template config_path="design/email/footer_template"}}

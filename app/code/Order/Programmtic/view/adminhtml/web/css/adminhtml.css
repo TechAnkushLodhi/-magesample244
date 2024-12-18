@@ -1,0 +1,11 @@
+.admin__menu .level-0.item-multiorder > a:before {
+    content: "";
+    display: inline-block;
+    width: 50px; /* Apne jarurat ke anusaar width set karein */
+    height: 50px; /* Apne jarurat ke anusaar height set karein */
+    background-image: url('../images/icon.png');
+    background-size: cover;
+}
+/* li#menu-order-programmtic-multiorder > a > span {
+    display: none;
+} */

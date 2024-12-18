@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Ui/etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">custom_form_listing.custom_form_listing_data_source</item>
+            <item name="deps" xsi:type="string">custom_form_listing.custom_form_listing_data_source</item>
+        </item>
+        <item name="spinner" xsi:type="string">custom_form_columns</item>
+        <item name="buttons" xsi:type="array">
+            <item name="add" xsi:type="string">Icecube_Manager::form_add</item>
+        </item>
+    </argument>
+    <dataSource name="custom_form_listing_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Icecube\Manager\Ui\DataProvider\Form\FormDataProvider</argument>
+            <argument name="name" xsi:type="string">custom_form_listing_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">form_id</argument>
+            <argument name="requestFieldName" xsi:type="string">form_id</argument>
+        </argument>
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="update_url" xsi:type="url" path="mui/index/render"/>
+                <item name="component" xsi:type="string">Magento_Ui/js/grid/provider</item>
+            </item>
+        </argument>
+    </dataSource>
+    <columns name="custom_form_columns">
+        <column name="form_id">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">ID</label>
+                <dataType>number</dataType>
+                <sortOrder>10</sortOrder>
+            </settings>
+        </column>
+        <column name="form_name">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Form Name</label>
+                <dataType>text</dataType>
+                <sortOrder>20</sortOrder>
+            </settings>
+        </column>
+        <column name="unique_identifier">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Unique Identifier</label>
+                <dataType>text</dataType>
+                <sortOrder>30</sortOrder>
+            </settings>
+        </column>
+        <column name="actions" class="Magento_Ui_Component_Listing_Column_Action">
+            <settings>
+                <label translate="true">Actions</label>
+                <actions>
+                    <action name="edit" class="Magento_Ui_Component_Listing_Column_Action_Edit">
+                        <settings>
+                            <urlPath>customform/form/edit</urlPath>
+                        </settings>
+                    </action>
+                    <action name="delete" class="Magento_Ui_Component_Listing_Column_Action_Delete">
+                        <settings>
+                            <urlPath>customform/form/delete</urlPath>
+                        </settings>
+                    </action>
+                </actions>
+            </settings>
+        </column>
+    </columns>
+</listing>

@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Db\Schema/etc/db_schema.xsd">
+    <schema version="1.0">
+        <!-- Table for Forms -->
+        <table name="custom_form" resource="default" engine="innodb" comment="Custom Forms">
+            <column name="form_id" xsi:type="int" padding="10" unsigned="true" nullable="false" identity="true" comment="Form ID">
+                <constraints>
+                    <primary key="true"/>
+                </constraints>
+            </column>
+            <column name="form_name" xsi:type="varchar" length="255" nullable="false" comment="Form Name"/>
+            <column name="unique_identifier" xsi:type="varchar" length="255" nullable="false" comment="Unique Identifier"/>
+            <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" comment="Creation Date"/>
+            <column name="updated_at" xsi:type="timestamp" nullable="true" on_update="CURRENT_TIMESTAMP" comment="Last Update Date"/>
+        </table>
+
+        <!-- Table for Form Fields -->
+        <table name="custom_form_field" resource="default" engine="innodb" comment="Custom Form Fields">
+            <column name="field_id" xsi:type="int" padding="10" unsigned="true" nullable="false" identity="true" comment="Field ID">
+                <constraints>
+                    <primary key="true"/>
+                </constraints>
+            </column>
+            <column name="form_id" xsi:type="int" padding="10" unsigned="true" nullable="false" comment="Form ID"/>
+            <column name="label" xsi:type="varchar" length="255" nullable="false" comment="Field Label"/>
+            <column name="type" xsi:type="varchar" length="50" nullable="false" comment="Field Type"/>
+            <column name="is_required" xsi:type="boolean" nullable="false" default="0" comment="Is Required"/>
+            <column name="options" xsi:type="text" nullable="true" comment="Field Options"/>
+            <constraints>
+                <foreign key="FK_CUSTOM_FORM_FIELD_CUSTOM_FORM" referenceId="custom_form_field_form_id" onDelete="CASCADE">
+                    <column name="form_id"/>
+                    <referenceTable name="custom_form"/>
+                </foreign>
+            </constraints>
+        </table>
+    </schema>
+</config>

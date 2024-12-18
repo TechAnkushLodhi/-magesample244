@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+     <default>
+         <icecube_mailsender>
+            <general>
+                <enable>1</enable>
+           </general>
+          <Mail_Data>
+             <NumberOfDays>90</NumberOfDays>
+            <SenderName>Name</SenderName>
+            <SenderEmail>example@gmail.com</SenderEmail>
+          </Mail_Data>
+         </icecube_mailsender>
+     </default>
+</config>

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+	<menu>
+	  <add id="Order_Programmtic::MultiOrder" title="MultiOrder" translate="title" module="Order_Programmtic" sortOrder="40" dependsOnModule="Order_Programmtic" resource="Order_Programmtic::MultiOrder"/>
+	  <add id="Order_Programmtic::Order" title="Order" translate="title" module="Order_Programmtic" parent="Order_Programmtic::MultiOrder" sortOrder="30" dependsOnModule="Order_Programmtic" resource="Order_Programmtic::Order"/>
+	  <add id="Order_Programmtic::Configuration" title="Configuration" translate="title" module="Order_Programmtic" parent="Order_Programmtic::Order" sortOrder="20" dependsOnModule="Order_Programmtic" action="admin/system_config/edit/section/multiorder_section" resource="Order_Programmtic::Configuration"/>
+	   <add id="Order_Programmtic::Import_Order" title="ImportOrder" translate="title" module="Order_Programmtic" parent="Order_Programmtic::Order" sortOrder="21" dependsOnModule="Order_Programmtic" action="importorder/index/index" resource="Order_Programmtic::Configuration"/>
+	</menu>
+</config>
+

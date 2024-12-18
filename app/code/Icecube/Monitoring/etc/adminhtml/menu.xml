@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Menu/etc/menu.xsd">
+    <menu>
+        <add id="Icecube_Monitoring::IcecubeMonitoring"
+             title="Monitoring Metrics"
+             translate="title"
+             module="Icecube_Monitoring"
+             resource="Icecube_Monitoring::IcecubeMonitoring"/>
+             
+        <add id="Icecube_Monitoring::Monitoring"
+             title="Monitoring"
+             translate="title"
+             module="Icecube_Monitoring"
+             parent="Icecube_Monitoring::IcecubeMonitoring"
+             resource="Icecube_Monitoring::Monitoring"/>
+
+        <add id="Icecube_Monitoring::Product"
+             title="Product"
+             translate="title"
+             module="Icecube_Monitoring"
+             parent="Icecube_Monitoring::Monitoring"
+             action="monitoring/product/index"
+             resource="Icecube_Monitoring::Product"/>
+    </menu>
+</config>
